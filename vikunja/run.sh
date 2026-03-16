@@ -46,7 +46,7 @@ if bashio::var.has_value "${EXTERNAL_URL}"; then
     bashio::log.info "External URL: ${EXTERNAL_URL}"
 else
     bashio::log.info "No external URL configured — ingress-only mode"
-    export VIKUNJA_SERVICE_PUBLICURL="/"
+    export VIKUNJA_SERVICE_PUBLICURL="http://localhost:3456"
 fi
 
 # Bind to all interfaces so both ingress (nginx) and external access work
