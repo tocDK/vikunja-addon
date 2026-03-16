@@ -1,0 +1,27 @@
+name: Vikunja
+version: "2.1.0"
+slug: vikunja
+description: Self-hosted task management for your household
+url: https://github.com/tocDK/vikunja-addon
+arch:
+  - amd64
+  - aarch64
+init: false
+ingress: true
+ingress_port: 8099
+panel_icon: mdi:check-all
+panel_title: Vikunja
+panel_admin: false
+ports:
+  "3456/tcp": 3456
+ports_description:
+  "3456/tcp": Vikunja web interface (external access)
+options:
+  external_url: ""
+  enable_registration: true
+schema:
+  external_url: url?
+  enable_registration: bool
+startup: application
+boot: auto
+stage: experimental
