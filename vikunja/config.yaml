@@ -20,7 +20,7 @@ ports_description:
 options:
   enable_registration: true
 schema:
-  external_url: url?
+  external_url: str?
   enable_registration: bool
 startup: application
 boot: auto
