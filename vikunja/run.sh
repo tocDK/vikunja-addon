@@ -92,9 +92,12 @@ http {
             proxy_set_header Accept-Encoding "";
 
             sub_filter_once off;
+            sub_filter_types text/html application/json;
             sub_filter 'href="/' 'href="${INGRESS_ENTRY}/';
             sub_filter 'src="/' 'src="${INGRESS_ENTRY}/';
             sub_filter 'action="/' 'action="${INGRESS_ENTRY}/';
+            sub_filter '"http://localhost:3456' '"${INGRESS_ENTRY}';
+            sub_filter '"/api/v1' '"${INGRESS_ENTRY}/api/v1';
 
             proxy_set_header Upgrade \$http_upgrade;
             proxy_set_header Connection \$connection_upgrade;
