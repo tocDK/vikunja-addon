@@ -1,0 +1,14 @@
+configuration:
+  external_url:
+    name: External URL
+    description: >-
+      Public URL for accessing Vikunja from outside your network
+      (e.g., https://vikunja.yourdomain.com). Leave empty for
+      ingress-only access via the HA sidebar.
+  enable_registration:
+    name: Enable Registration
+    description: >-
+      Allow new users to create accounts. Disable this after you
+      and your household members have registered.
+network:
+  3456/tcp: Vikunja web interface (external access)
