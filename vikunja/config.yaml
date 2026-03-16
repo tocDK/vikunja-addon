@@ -7,6 +7,7 @@ image: ghcr.io/tocdk/{arch}-addon-vikunja
 arch:
   - amd64
   - aarch64
+hassio_api: true
 init: false
 ingress: true
 ingress_port: 8099
