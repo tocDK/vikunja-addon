@@ -1,8 +1,9 @@
+ARG BUILD_FROM
+
 # Stage 1: Get Vikunja binary from official image
 FROM vikunja/vikunja:2.1.0 AS vikunja
 
 # Stage 2: Build on HA base image
-ARG BUILD_FROM
 FROM ${BUILD_FROM}
 
 # Install nginx
