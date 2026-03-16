@@ -1,5 +1,5 @@
 name: Vikunja
-version: "2.1.0"
+version: "2.1.0-1"
 slug: vikunja
 description: Self-hosted task management for your household
 url: https://github.com/tocDK/vikunja-addon
@@ -18,7 +18,6 @@ ports:
 ports_description:
   "3456/tcp": Vikunja web interface (external access)
 options:
-  external_url: ""
   enable_registration: true
 schema:
   external_url: url?

@@ -9,7 +9,11 @@ bashio::log.info "Starting Vikunja add-on..."
 # ---------------------------------------------------------------------------
 # Read add-on options
 # ---------------------------------------------------------------------------
-EXTERNAL_URL=$(bashio::config 'external_url')
+if bashio::config.has_value 'external_url'; then
+    EXTERNAL_URL=$(bashio::config 'external_url')
+else
+    EXTERNAL_URL=""
+fi
 ENABLE_REGISTRATION=$(bashio::config 'enable_registration')
 
 # ---------------------------------------------------------------------------

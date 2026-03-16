@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.0-1
+
+- Fix: empty external_url option caused validation error preventing startup
+- Make external_url truly optional (omitted by default)
+
 ## 2.1.0
 
 - Initial release
