@@ -9,8 +9,8 @@ FROM ${BUILD_FROM}
 # Install nginx
 RUN apk add --no-cache nginx
 
-# Copy Vikunja binary and frontend
-COPY --from=vikunja /app/vikunja /app/vikunja/vikunja
+# Copy entire Vikunja app directory (binary + embedded frontend)
+COPY --from=vikunja /app/vikunja /app/vikunja
 
 # Vikunja serves its own frontend from the binary — no separate files needed
 
