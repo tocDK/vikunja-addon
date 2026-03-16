@@ -2,6 +2,11 @@
 
 [![Home Assistant Add-on](https://img.shields.io/badge/Home%20Assistant-Add--on-blue.svg)](https://www.home-assistant.io/hassio/)
 
+> **Warning — Proof of Concept**
+> This add-on is in early development. It works but has not been extensively tested
+> in production. Use at your own risk. Data is stored locally in SQLite — back up
+> `/data` before upgrading. Expect breaking changes before v1.0.
+
 Self-hosted task management for your household, running as a Home Assistant add-on.
 
 [Vikunja](https://vikunja.io) is an open-source, self-hosted to-do app. This add-on wraps it for

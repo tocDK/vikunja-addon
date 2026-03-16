@@ -3,6 +3,7 @@ version: "2.1.0"
 slug: vikunja
 description: Self-hosted task management for your household
 url: https://github.com/tocDK/vikunja-addon
+image: ghcr.io/tocdk/{arch}-addon-vikunja
 arch:
   - amd64
   - aarch64

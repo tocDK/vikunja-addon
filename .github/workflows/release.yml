@@ -1,0 +1,77 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build:
+    name: Build and push (${{ matrix.arch }})
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      matrix:
+        arch: [amd64, aarch64]
+        include:
+          - arch: amd64
+            platform: linux/amd64
+            base: ghcr.io/home-assistant/amd64-base:3.21
+          - arch: aarch64
+            platform: linux/arm64
+            base: ghcr.io/home-assistant/aarch64-base:3.21
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get version from release tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up QEMU (for cross-platform builds)
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: vikunja
+          file: vikunja/Dockerfile
+          platforms: ${{ matrix.platform }}
+          push: true
+          build-args: BUILD_FROM=${{ matrix.base }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.arch }}-addon-vikunja:${{ steps.version.outputs.version }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.arch }}-addon-vikunja:latest
+
+  update-config:
+    name: Verify release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify config version matches release
+        run: |
+          CONFIG_VERSION=$(grep '^version:' vikunja/config.yaml | sed 's/version: *"\?\([^"]*\)"\?/\1/')
+          RELEASE_VERSION="${GITHUB_REF_NAME#v}"
+          if [ "$CONFIG_VERSION" != "$RELEASE_VERSION" ]; then
+            echo "::error::config.yaml version ($CONFIG_VERSION) does not match release tag ($RELEASE_VERSION)"
+            exit 1
+          fi
+          echo "Version match: $CONFIG_VERSION"
