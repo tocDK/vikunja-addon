@@ -53,6 +53,57 @@ fi
 export VIKUNJA_SERVICE_INTERFACE=":3456"
 
 # ---------------------------------------------------------------------------
+# Set up nginx SSL proxy if certificates exist
+# ---------------------------------------------------------------------------
+if [ -f /ssl/fullchain.pem ] && [ -f /ssl/privkey.pem ]; then
+    bashio::log.info "SSL certificates found — starting HTTPS proxy on port 8443"
+
+    cat > /tmp/nginx.conf <<'NGINX_EOF'
+worker_processes 1;
+pid /tmp/nginx.pid;
+error_log /dev/stderr;
+
+events {
+    worker_connections 128;
+}
+
+http {
+    access_log off;
+
+    map $http_upgrade $connection_upgrade {
+        default upgrade;
+        '' close;
+    }
+
+    server {
+        listen 8443 ssl;
+
+        ssl_certificate /ssl/fullchain.pem;
+        ssl_certificate_key /ssl/privkey.pem;
+
+        location / {
+            proxy_pass http://127.0.0.1:3456;
+            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection $connection_upgrade;
+            proxy_read_timeout 86400s;
+            proxy_send_timeout 86400s;
+        }
+    }
+}
+NGINX_EOF
+
+    nginx -c /tmp/nginx.conf &
+else
+    bashio::log.info "No SSL certificates found at /ssl/ — HTTPS proxy disabled"
+    bashio::log.info "Install DuckDNS add-on with Let's Encrypt to enable HTTPS"
+fi
+
+# ---------------------------------------------------------------------------
 # Start Vikunja
 # ---------------------------------------------------------------------------
 bashio::log.info "Starting Vikunja..."
