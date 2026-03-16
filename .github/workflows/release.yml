@@ -46,6 +46,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      - name: Lowercase owner
+        id: owner
+        run: echo "owner=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
@@ -55,8 +59,8 @@ jobs:
           push: true
           build-args: BUILD_FROM=${{ matrix.base }}
           tags: |
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.arch }}-addon-vikunja:${{ steps.version.outputs.version }}
-            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ matrix.arch }}-addon-vikunja:latest
+            ${{ env.REGISTRY }}/${{ steps.owner.outputs.owner }}/${{ matrix.arch }}-addon-vikunja:${{ steps.version.outputs.version }}
+            ${{ env.REGISTRY }}/${{ steps.owner.outputs.owner }}/${{ matrix.arch }}-addon-vikunja:latest
 
   update-config:
     name: Verify release
