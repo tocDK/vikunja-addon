@@ -7,17 +7,12 @@ image: ghcr.io/tocdk/{arch}-addon-vikunja
 arch:
   - amd64
   - aarch64
-hassio_api: true
 init: false
-ingress: true
-ingress_port: 8099
-panel_icon: mdi:check-all
-panel_title: Vikunja
-panel_admin: false
+webui: http://[HOST]:[PORT:3456]
 ports:
   "3456/tcp": 3456
 ports_description:
-  "3456/tcp": Vikunja web interface (external access)
+  "3456/tcp": Vikunja web interface
 options:
   enable_registration: true
 schema:
