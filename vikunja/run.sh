@@ -53,10 +53,62 @@ fi
 export VIKUNJA_SERVICE_INTERFACE=":3456"
 
 # ---------------------------------------------------------------------------
+# Generate nginx config with ingress path baked in
+# ---------------------------------------------------------------------------
+INGRESS_ENTRY=$(bashio::addon.ingress_entry)
+bashio::log.info "Ingress path: ${INGRESS_ENTRY}"
+
+cat > /tmp/nginx.conf <<NGINX_EOF
+worker_processes 1;
+pid /tmp/nginx.pid;
+error_log /dev/stderr;
+
+events {
+    worker_connections 128;
+}
+
+http {
+    access_log off;
+
+    map \$http_upgrade \$connection_upgrade {
+        default upgrade;
+        '' close;
+    }
+
+    server {
+        listen 8099;
+
+        allow 172.30.32.2;
+        deny all;
+
+        location / {
+            proxy_pass http://127.0.0.1:3456;
+
+            proxy_http_version 1.1;
+            proxy_set_header Host \$http_host;
+            proxy_set_header X-Real-IP \$remote_addr;
+            proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto \$scheme;
+            proxy_set_header Accept-Encoding "";
+
+            sub_filter_once on;
+            sub_filter '<head>' '<head><base href="${INGRESS_ENTRY}/">';
+
+            proxy_set_header Upgrade \$http_upgrade;
+            proxy_set_header Connection \$connection_upgrade;
+
+            proxy_read_timeout 86400s;
+            proxy_send_timeout 86400s;
+        }
+    }
+}
+NGINX_EOF
+
+# ---------------------------------------------------------------------------
 # Start nginx (ingress proxy) in background
 # ---------------------------------------------------------------------------
 bashio::log.info "Starting nginx ingress proxy..."
-nginx -c /etc/nginx/nginx.conf &
+nginx -c /tmp/nginx.conf &
 
 # ---------------------------------------------------------------------------
 # Start Vikunja
