@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.4
+
+- Fix lazy-loaded JS chunks and CSS preloads (dynamic imports use different quoting patterns)
+- Fix API path rewriting in JavaScript for login/token refresh calls
+
 ## 2.1.3
 
 - Fix 404s for fonts, images, and SVGs referenced from CSS and JavaScript
