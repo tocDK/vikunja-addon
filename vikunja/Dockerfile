@@ -6,11 +6,14 @@ FROM vikunja/vikunja:2.1.0 AS vikunja
 # Stage 2: Build on HA base image
 FROM ${BUILD_FROM}
 
-# Install nginx for SSL termination
+# Install nginx for ingress proxy
 RUN apk add --no-cache nginx
 
 # Copy entire Vikunja app directory (binary + embedded frontend)
 COPY --from=vikunja /app/vikunja /app/vikunja
+
+# Copy rootfs (nginx config)
+COPY rootfs /
 
 # Copy startup script
 COPY run.sh /run.sh
@@ -27,6 +30,6 @@ LABEL \
     io.hass.type="addon" \
     io.hass.version="2.1.0"
 
-EXPOSE 3456 8443
+EXPOSE 3456 8099
 
 CMD [ "/run.sh" ]

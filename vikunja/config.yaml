@@ -8,13 +8,15 @@ arch:
   - amd64
   - aarch64
 init: false
-webui: http://[HOST]:[PORT:3456]
+ingress: true
+ingress_port: 8099
+panel_icon: mdi:check-all
+panel_title: Vikunja
+panel_admin: false
 ports:
   "3456/tcp": 3456
-  "8443/tcp": 8443
 ports_description:
-  "3456/tcp": Vikunja web interface (local)
-  "8443/tcp": Vikunja HTTPS (remote access)
+  "3456/tcp": Vikunja web interface (direct access)
 map:
   - type: ssl
     read_only: true
