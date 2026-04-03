@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.2
+
+- Fix API URL for ingress — inject correct API path so frontend connects through ingress proxy
+
 ## 2.1.1
 
 - Add HA ingress support (sidebar panel via nginx sub_filter)
