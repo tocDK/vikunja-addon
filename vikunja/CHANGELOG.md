@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.3
+
+- Fix 404s for fonts, images, and SVGs referenced from CSS and JavaScript
+
 ## 2.1.2
 
 - Fix API URL for ingress — inject correct API path so frontend connects through ingress proxy
