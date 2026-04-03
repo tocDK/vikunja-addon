@@ -28,7 +28,7 @@ LABEL \
     io.hass.description="Self-hosted task management for your household" \
     io.hass.arch="amd64|aarch64" \
     io.hass.type="addon" \
-    io.hass.version="2.1.4"
+    io.hass.version="2.1.5"
 
 EXPOSE 3456 8099
 

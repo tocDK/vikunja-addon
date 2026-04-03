@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.5
+
+- Fix all dynamic chunk loading by rewriting Vite base path function in JS
+- Add text/javascript to sub_filter_types (Vikunja serves JS as text/javascript, not application/javascript)
+- Simplify nginx config: single Vite base path rewrite replaces multiple pattern-specific rules
+
 ## 2.1.4
 
 - Fix lazy-loaded JS chunks and CSS preloads (dynamic imports use different quoting patterns)
